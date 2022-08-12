@@ -43,7 +43,13 @@ const courses_list_1 = [
         title: "The Complete Presentation and speech",
         duration: "1h 30m",
         thumbnail: require("../assets/images/thumbnail_2.png")
-    }
+    },
+    {
+        id: 2,
+        title: "Introduction to Internet Of Things",
+        duration: "1h 45m",
+        thumbnail: require("../assets/images/thumbnail_3.png")
+    },
 ]
 
 const courses_list_2 = [

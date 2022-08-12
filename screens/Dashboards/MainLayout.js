@@ -22,7 +22,7 @@ const bottom_tabs = constants.bottom_tabs.map(tab=>({
 const TabIndicator = ({measureLayout, scrollX})=>{
 
     const inputRange = bottom_tabs.map((_, i)=> i * SIZES.width)
-    console.log('range', measureLayout)
+    //console.log('range', inputRange)
 
 
     const tabIndicatorWidth = scrollX.interpolate({
@@ -39,8 +39,7 @@ const TabIndicator = ({measureLayout, scrollX})=>{
     React.useEffect(()=>{
         console.log('translatex', translateX)
     }, [translateX])
-
-
+    
     return (
         <Animated.View 
             style={{
@@ -57,7 +56,7 @@ const TabIndicator = ({measureLayout, scrollX})=>{
     )
 }
 
-const Tabs = ({scrollX})=>{
+const Tabs = ({scrollX, onBottomTabPress})=>{
     const containerRef = React.useRef()
     const [measureLayout, setMeasureLayout] = React.useState([])
 
@@ -66,8 +65,6 @@ const Tabs = ({scrollX})=>{
         bottom_tabs.forEach((tab)=>{
             tab?.ref?.current?.measureLayout(
                 containerRef.current, (x, y, width, height)=>{
-                    console.log('x', x)
-                    console.log('y', y)
                     ml.push({x, y, width, height})
 
                     if(ml.length === bottom_tabs.length){
@@ -99,6 +96,7 @@ const Tabs = ({scrollX})=>{
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}
+                    onPress={()=>onBottomTabPress(index)}
                 >
                     <Image 
                         source={item.icon}
@@ -128,17 +126,25 @@ const MainLayout = () => {
     const flatListRef = React.useRef()
     const scrollX = React.useRef(new Animated.Value(0)).current
 
+    const onBottomTabPress = React.useCallback(bottomTabIndex=>{
+        flatListRef?.current?.scrollToOffset({
+            offset: bottomTabIndex * SIZES.width
+        })
+    })
+
+     
+
     const renderContent = ()=>{
         return (
             <View
                 style={{
                     flex: 1,
-                    backgroundColor: 'red'
                 }}
             >
                 <Animated.FlatList
                     ref={flatListRef}
                     horizontal
+                    scrollEnabled={false}
                     pagingEnabled
                     snapToAlignment='center'
                     snapToInterval={SIZES.width}
@@ -186,6 +192,7 @@ const MainLayout = () => {
                 >
                     <Tabs 
                         scrollX={scrollX}
+                        onBottomTabPress={onBottomTabPress}
                     />
                 </View>
                 </Shadow>
